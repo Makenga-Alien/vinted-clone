@@ -1,5 +1,15 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
+// Function to create a JWT token
+const createToken = (user) => {
+  return jwt.sign(
+    { id: user._id, email: user.email },
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_EXPIRES_IN }
+  );
+};
 
 exports.signup = async (req, res) => {
   try {
@@ -12,7 +22,10 @@ exports.signup = async (req, res) => {
     const user = new User({ username, email, password: hashed });
     await user.save();
 
-    res.status(201).json({ message: "User created", user });
+    // Create JWT token
+    const token = createToken(user);
+
+    res.status(201).json({ message: "User created", token });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -30,7 +43,10 @@ exports.login = async (req, res) => {
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) return res.status(401).json({ error: "Invalid credentials" });
 
-    res.status(200).json({ message: "Login success", user });
+    // Create JWT token
+    const token = createToken(user);
+
+    res.status(200).json({ message: "Login success", token });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }

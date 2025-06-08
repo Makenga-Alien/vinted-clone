@@ -3,13 +3,20 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
 
+const authRoutes = require("./routes/authRoutes");
+const requireAuth = require("./middleware/authMiddleware"); // ✅ Add this
+
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-const authRoutes = require("./routes/authRoutes");
+
 app.use("/api/auth", authRoutes);
 
+// ✅ Example of a protected route:
+app.get("/api/secret", requireAuth, (req, res) => {
+  res.json({ message: `You are logged in as ${req.user.email}` });
+});
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("✅ MongoDB connected"))
