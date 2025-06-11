@@ -2,7 +2,8 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
-import userRoutes from "./routes/user.routes.js"; 
+import userRoutes from "./routes/user.routes.js";
+import offerRoutes from "./routes/offer.routes.js";
 
 dotenv.config();
 
@@ -14,6 +15,8 @@ app.use(express.json());
 
 // Use user routes
 app.use("/user", userRoutes); // 
+
+app.use(offerRoutes);
 
 // Test route
 app.get("/", (req, res) => {
