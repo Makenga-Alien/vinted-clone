@@ -11,19 +11,14 @@ const offerSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    product_details: [
-      {
-        MARQUE: String,
-        TAILLE: String,
-        ÉTAT: String,
-        COULEUR: String,
-        EMPLACEMENT: String,
-      },
-    ],
-    product_image: Object,
+  
+    product_details: [Object], // E.g. [{brand: "Nike"}, {size: "M"}]
+    product_image: Object, // Will be used with Cloudinary later
+
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      required:true,
     },
   },
   {
